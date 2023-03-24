@@ -7,7 +7,17 @@ from urllib.parse import urlparse as parse
 import logging
 requests.packages.urllib3.disable_warnings()
 
-#Set debug level to see requests
+#Try TE0
+#Requests que generan Redirects + Recursos estaticos (GETs) + Generar errores para forzar el no procesamiento de un Content-Length
+#Add H2.0
+#GET requests con tecnicas de ofuscacion del CL (Regilero + ReqSmuggler)
+#Transfer-Encoding: chunked
+
+#2c
+#GET /resources/images/blog.svg HTTP/1.1
+#Foo: Bar
+
+
 #try:
 #    from http.client import HTTPConnection
 #except ImportError:
@@ -31,8 +41,9 @@ session.stream = True
 
 URLs = open(URLFilePath, "r")
 for url in URLs:
-    CandidateMethod = url.split(" - ")[1]
-    FullUrl = parse(url.split(" - ")[0])
+    CandidateMethod = url.split("-")[1]
+    FullUrl = parse(url.split("-")[0])
+    NormalRespCode = url.split("-")[2]
     CL0Scheme = FullUrl.scheme
     CL0Host = FullUrl.netloc
     CL0TestPath = FullUrl.path
@@ -47,4 +58,4 @@ for url in URLs:
     else: #PUT
         CL0Test = session.put(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
         CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
-    print("The response code for %s is %s and after CL0 is %s for method %s" % (CL0TestPath,str(CL0Test.status_code),str(CL0Result.status_code),CandidateMethod))
+    print("[%s] - The response code for %s is %s and after CL0 is %s for method %s" % (NormalRespCode,CL0TestPath,str(CL0Test.status_code),str(CL0Result.status_code),CandidateMethod))
