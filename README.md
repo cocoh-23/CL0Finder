@@ -39,6 +39,7 @@ Transfer-Encoding: chunked
 2c
 GET /thisPageDoesNotExist HTTP/1.1
 Foo: Bar
+0\r\n\r\n
 ```
 
 ## Usage
