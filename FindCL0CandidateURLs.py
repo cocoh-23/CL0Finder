@@ -30,9 +30,9 @@ for url in URLs:
     if(requestQualifiesForCL0):
         if(GetResponseCodeTest != 405 and (GetResponseCodeTest > 300 and GetResponseCodeTest < 404) or GetResponseCodeTest == 422 ):
             results.write(url + " - GET")
-        elif(PostResponseCodeTest != 405 and (PostResponseCodeTest > 300 and PostResponseCodeTest < 404) or PostResponseCodeTest == 422 ):
+        if(PostResponseCodeTest != 405 and (PostResponseCodeTest > 300 and PostResponseCodeTest < 404) or PostResponseCodeTest == 422 ):
             results.write(url + " - POST")
-        elif(PutResponseCodeTest != 405 and (PutResponseCodeTest > 300 and PutResponseCodeTest < 404) or PutResponseCodeTest == 422 ):
+        if(PutResponseCodeTest != 405 and (PutResponseCodeTest > 300 and PutResponseCodeTest < 404) or PutResponseCodeTest == 422 ):
             results.write(url + " - PUT")
 results.close()
 URLs.close()
