@@ -30,10 +30,10 @@ for url in URLs:
     requestQualifiesForCL0 = ((GetResponseCodeTest > 300 and GetResponseCodeTest < 404) or GetResponseCodeTest == 422) or ((PostResponseCodeTest > 300 and PostResponseCodeTest < 404) or PostResponseCodeTest == 422) or ((PutResponseCodeTest > 300 and PutResponseCodeTest < 404) or PutResponseCodeTest == 422)
     if(requestQualifiesForCL0):
         if((GetResponseCodeTest > 300 and GetResponseCodeTest < 404) or GetResponseCodeTest == 422 ):
-            results.write(url + "-GET-" + str(GetResponseCodeTest) + "\n")
+            results.write(url + "---GET---" + str(GetResponseCodeTest) + "\n")
         if((PostResponseCodeTest > 300 and PostResponseCodeTest < 404) or PostResponseCodeTest == 422 ):
-            results.write(url + "-POST-" + str(PostResponseCodeTest) + "\n")
+            results.write(url + "---POST---" + str(PostResponseCodeTest) + "\n")
         if((PutResponseCodeTest > 300 and PutResponseCodeTest < 404) or PutResponseCodeTest == 422 ):
-            results.write(url + "-PUT-" + str(PutResponseCodeTest) + "\n")
+            results.write(url + "---PUT---" + str(PutResponseCodeTest) + "\n")
 results.close()
 URLs.close()
