@@ -66,7 +66,7 @@ The output will be a message indicating what the response code for the smuggled 
 
 By seeing these three response codes, we see there is an odd behaviour as the follow up request that is sent after the smuggled request, generates a 404 response code, and by sending a normal request, we receive a 200 response code. This is a nice clue of an endpoint we should test to see if indeed is vulnerable to CL0.
 
-##TODO:
+## TODO:
 
 * Add obfuscation techniques in order to trigger the hiding of CL and TE headers (same as in common HTTP Desync attacks).
 * Add threading.
