@@ -41,9 +41,9 @@ session.stream = True
 
 URLs = open(URLFilePath, "r")
 for url in URLs:
-    CandidateMethod = url.split("-")[1]
-    FullUrl = parse(url.split("-")[0])
-    NormalRespCode = url.split("-")[2]
+    CandidateMethod = url.split("---")[1]
+    FullUrl = parse(url.split("---")[0])
+    NormalRespCode = url.split("---")[2]
     CL0Scheme = FullUrl.scheme
     CL0Host = FullUrl.netloc
     CL0TestPath = FullUrl.path
