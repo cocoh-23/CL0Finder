@@ -20,7 +20,7 @@ The output will be a message indicating what the response code for the smuggled 
 [200] - The response code for /trending?spoken_language_code=cr is 422 and after CL0 is 404 for method PUT
 ```
 
-* [200] Means that the first normal request to the url, generated a 200 OK response.
+* [200] Means that the first normal request to the url (issued by FindCL0CandidateURLs.py), generated a 200 OK response.
 * 422 means that the response code to the smuggled request was 422 Unprocesable Entity
 * 404 means that the follow up request generated a 404 Not Found response code
 
