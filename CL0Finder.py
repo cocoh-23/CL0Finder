@@ -49,13 +49,22 @@ for url in URLs:
     CL0TestPath = FullUrl.path
     CL0ResultPath = FullUrl.path
     CL0TestBody = 'GET /thisPageDoesNotExist HTTP/1.1\r\nFoo: Bar'
-    if(CandidateMethod == 'GET'):#We send the second get always, as the same request can appear several times with different methods
+    if(CandidateMethod == 'GET'):#In case of get, we try to desync, but smuggling with other methods too
         CL0Test = session.get(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
         CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
+        CL0PostTest = session.post(CL0Scheme + "://" + CL0Host + CL0ResultPath,data=CL0TestBody, allow_redirects=False)
+        CL0GetPostResult = session.get(CL0Scheme + "://" + CL0Host + CL0TestPath, allow_redirects=False)
+        CL0PutTest = session.put(CL0Scheme + "://" + CL0Host + CL0ResultPath,data=CL0TestBody, allow_redirects=False)
+        CL0GetPutResult = session.get(CL0Scheme + "://" + CL0Host + CL0TestPath, allow_redirects=False)
     elif(CandidateMethod == 'POST'):
         CL0Test = session.post(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
-        CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
+        CL0Result = session.post(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
     else: #PUT
         CL0Test = session.put(CL0Scheme + "://" + CL0Host + CL0TestPath, data=CL0TestBody, allow_redirects=False)
-        CL0Result = session.get(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
-    print("[%s] - The response code for %s is %s and after CL0 is %s for method %s" % (NormalRespCode,CL0TestPath,str(CL0Test.status_code),str(CL0Result.status_code),CandidateMethod))
+        CL0Result = session.put(CL0Scheme + "://" + CL0Host + CL0ResultPath, allow_redirects=False)
+    if(NormalRespCode != CL0Result.status_code):
+        print("The response code for %s is %s and after CL0 is %s for method %s" % (CL0TestPath,str(NormalRespCode.status_code),str(CL0Result.status_code),CandidateMethod))
+    if(NormalRespCode != CL0GetPostResult.status_code):
+        print("The response code for %s is %s and after CL0 is %s for method POST ,but using a GET to smuggle the request" % (CL0TestPath,str(NormalRespCode.status_code),str(CL0GetPostResult.status_code)))
+    if(NormalRespCode != CL0GetPutResult.status_code):
+        print("The response code for %s is %s and after CL0 is %s for method PUT ,but using a GET to smuggle the request" % (CL0TestPath,str(NormalRespCode.status_code),str(CL0GetPutResult.status_code)))
