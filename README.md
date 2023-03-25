@@ -20,7 +20,7 @@ Content-Length: 44
 GET /thisPageDoesNotExist HTTP/1.1
 Foo: Bar
 ```
-If the request after the previos smuggled one, returns a response code that is different to the response code that was returned after sending the base request, this is an interesting behaviour that should be manually tested.
+If the request after the smuggled one, returns a response code that is different to the response code that was returned after sending the base request (sent by FindCandidateURLs.py), this is an interesting behaviour that should be manually tested. In the case of the GET method as a normal request, we try to desyn with GET, POST and PUT also.
 
 ## TE.0 Basic Technique
 
