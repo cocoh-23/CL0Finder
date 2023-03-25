@@ -55,17 +55,21 @@ After the candidate urls file has been generated, execute **CL0Finder.py** speci
 ```bash
 python3 CL0Finder.py -u urls
 ```
-The output will be a message indicating what the response code for the smuggled request was, and the response code for the follow up request, like this:
+The output will be a message indicating when a response code for the base request, is different for the same request, but being issued after the smuggled request like this:
 
 ```bash
-[200] - The response code for /trending?spoken_language_code=cr is 422 and after CL0 is 404 for method PUT
+The response code for /trending?spoken_language_code=cr is 200 and after CL0 is 404 for method X
 ```
 
 * [200] Means that the first normal request to the url (issued by FindCandidateURLs.py), generated a 200 OK response.
-* 422 means that the response code to the smuggled request was 422 Unprocesable Entity
-* 404 means that the follow up request generated a 404 Not Found response code
+* 404 means that the follow up request to the smuggled one, generated a 404 Not Found response code
 
-By seeing these three response codes, we see there is an odd behaviour as the follow up request that is sent after the smuggled request, generates a 404 response code, and by sending a normal request, we receive a 200 response code. This is a nice clue of an endpoint we should test to see if indeed is vulnerable to CL0.
+By seeing these two response codes, we see there is an odd behaviour as the follow up request that is sent after the smuggled request, generates a 404 response code, and by sending a normal request, we receive a 200 response code. This is a nice clue of an endpoint we should test to see if indeed is vulnerable to CL0.
+Also, for GET base requests, we also try to poison the socket by issuing smuggled requests with POST and PUT methods. In this case, the output will be something like this:
+
+```bash
+The response code for /trending?spoken_language_code=cr is 200 and after CL0 is 404 for method GET, but using a POST/PUT to smuggle the request
+```
 
 ## TO DO:
 
