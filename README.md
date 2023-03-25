@@ -44,10 +44,10 @@ Foo: Bar
 
 ## Usage
 The best and easy way to use this tool, is to navigate any target you want proxying the traffic through Burp Suite, and export all the intercepted links **Dashboard** -> **Target** -> **Right click on your target** -> **Copy links in this host**. Its better to include every static asset such as .js and .css files, as CL0 vulnerabilities sometimes arise from specific requests to these files.
-After this, save every URL to a file and execute **FindCL0CandidateURLs.py** specifying that file (-u), saving the output (-o) to a new file like this:
+After this, save every URL to a file and execute **FindCandidateURLs.py** specifying that file (-u), saving the output (-o) to a new file like this:
 
 ```bash
-python3 FindCL0CandidateURLs.py -u urlsToTest -o urls
+python3 FindCandidateURLs.py -u urlsToTest -o urls
 ```
 
 This script will save the candidate URLs in the form of `URL-Method-ResponseCode` like this `https://github.com/trending?spoken_language_code=cr-PUT-422`.
@@ -61,7 +61,7 @@ The output will be a message indicating what the response code for the smuggled 
 [200] - The response code for /trending?spoken_language_code=cr is 422 and after CL0 is 404 for method PUT
 ```
 
-* [200] Means that the first normal request to the url (issued by FindCL0CandidateURLs.py), generated a 200 OK response.
+* [200] Means that the first normal request to the url (issued by FindCandidateURLs.py), generated a 200 OK response.
 * 422 means that the response code to the smuggled request was 422 Unprocesable Entity
 * 404 means that the follow up request generated a 404 Not Found response code
 
@@ -72,3 +72,4 @@ By seeing these three response codes, we see there is an odd behaviour as the fo
 * Add obfuscation techniques in order to trigger the hiding of CL and TE headers (same as in common HTTP Desync attacks).
 * Add threading.
 * Mutiple refactoring (this scripts were recently created so it may change frequently).
+* Add support for logged in requests.
